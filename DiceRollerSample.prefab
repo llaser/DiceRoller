@@ -959,6 +959,7 @@ MonoBehaviour:
   - {fileID: 3278009459933771459}
   referenceCollider: {fileID: 4806209385636057609}
   rollTarget: {fileID: 7458368561416841257}
+  targetShape: 1
   rollRadius: 2
   rollAngularVelocityMagnitude: 0
   rollVelocity: {x: 0, y: 0, z: 0}
@@ -1374,6 +1375,7 @@ MonoBehaviour:
   - {fileID: 3278009459933771459}
   referenceCollider: {fileID: 1952658504976505387}
   rollTarget: {fileID: 9142205407045606057}
+  targetShape: 1
   rollRadius: 2
   rollAngularVelocityMagnitude: 10
   rollVelocity: {x: 0, y: 5, z: 0}

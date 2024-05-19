@@ -6,6 +6,12 @@ using VRC.SDKBase;
 
 namespace Llaser.DiceRoller
 {
+    enum SpawnTargetShape
+    {
+        Sphere,
+        Cylinder
+    }
+
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DiceRoller : UdonSharpBehaviour
     {
@@ -23,8 +29,11 @@ namespace Llaser.DiceRoller
 
         [SerializeField, Tooltip("ダイスの出現先")]
         private Transform rollTarget;
-        
-        [SerializeField, Tooltip("ダイスが出現する範囲(球状), rollTargetのローカルスケール")]
+
+        [SerializeField, Tooltip("出現先の形状(円筒はy軸向き、高さ=直径)")]
+        private SpawnTargetShape targetShape = SpawnTargetShape.Cylinder;
+
+        [SerializeField, Tooltip("ダイスが出現する範囲の半径, rollTargetのローカルスケール")]
         private float rollRadius;
 
         [SerializeField, Tooltip("ダイス出現時の角速度の大きさ")]
@@ -78,9 +87,21 @@ namespace Llaser.DiceRoller
                 Vector3 closestPoint = referenceCollider.ClosestPoint(dieCenter);
                 if (Vector3.Distance(dieCenter, closestPoint) >= DistaceThreshold) { continue; }
 
-                Vector3 targetPosition = rollTarget.TransformPoint(Random.insideUnitSphere * rollRadius);
+                Vector3 targetPosition;
+                switch (targetShape)
+                {
+                    case SpawnTargetShape.Sphere:
+                        targetPosition = rollTarget.TransformPoint(Random.insideUnitSphere * rollRadius);
+                        break;
+                    case SpawnTargetShape.Cylinder:
+                        Vector2 pointInCircle = Random.insideUnitCircle;
+                        targetPosition = rollTarget.TransformPoint(new Vector3(pointInCircle.x, Random.value * 2 * rollRadius, pointInCircle.y));
+                        break;
+                    default:
+                        targetPosition = Vector3.zero;
+                        break;
+                }
                 Quaternion targetRotation = Random.rotationUniform;
-                Vector3 newAngularVelocity = Random.onUnitSphere * rollAngularVelocityMagnitude;
 
                 if (!Networking.IsOwner(die)) { Networking.SetOwner(Networking.LocalPlayer, die); }
 
@@ -89,6 +110,7 @@ namespace Llaser.DiceRoller
                 {
                     rigidbody.position = targetPosition;
                     rigidbody.rotation = targetRotation;
+                    Vector3 newAngularVelocity = Random.onUnitSphere * rollAngularVelocityMagnitude;
                     rigidbody.angularVelocity = newAngularVelocity;
                     rigidbody.velocity = rollVelocity;
                 }

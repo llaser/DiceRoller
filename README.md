@@ -1,6 +1,6 @@
 # DiceRoller
 
-VRChatワールド用の、ダイス等をまとめて振るギミック。
+ダイス等をまとめて振るVRChatワールド用のギミック。
 
 ## 各スクリプトについて
 
@@ -20,11 +20,16 @@ VRChatワールド用の、ダイス等をまとめて振るギミック。
     - 指定したコライダーは無効化され、Triggerになります
   - rollTarget
     - ダイスの移動先
+    - 以下のtargetShape,rollRadiusはこのrollTargetのローカルスケール
+  - targetShape
+    - 移動先の形状を指定(rollTargetのローカルスケール)
+      - Sphere: 半径がrollRadiusの球
+        - 振った後のダイスが中央に集まりやすい
+      - Cylinder: y軸向きの円筒、高さが2*rollRadius、半径がrollRadius
   - rollRadius
-    - ダイスが出現しうるrollTargetからの距離
-    - rollTargetのローカルスケール
-      - rollTargetのスケールを(1,0,1)のようにすると、出現範囲を円状に変えられます
-  - rollAngularVelocityMagnitude
+    - 移動先の半径(rollTargetのローカルスケール)
+      - rollTargetのスケールを(1,0,1)のようにすると出現範囲を平面にできます
+ - rollAngularVelocityMagnitude
     - ダイス出現時の角速度の大きさ(グローバルスケール)
   - rollVelocity
     - ダイス出現時の速度(グローバルスケール)
